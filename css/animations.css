@@ -1,0 +1,41 @@
+/*==================================
+BUTTON RIPPLE
+==================================*/
+
+.btn-primary{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.ripple{
+
+    position:absolute;
+
+    width:15px;
+
+    height:15px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.6);
+
+    transform:translate(-50%,-50%) scale(0);
+
+    animation:ripple .7s linear;
+
+}
+
+@keyframes ripple{
+
+    to{
+
+        transform:translate(-50%,-50%) scale(25);
+
+        opacity:0;
+
+    }
+
+}
