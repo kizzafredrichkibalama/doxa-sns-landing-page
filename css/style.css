@@ -893,7 +893,7 @@ p{
 }
 
 .icp-large{
-    width:350px;
+    width: 1000px;
     margin:auto;
     animation:float 5s ease-in-out infinite;
 }
