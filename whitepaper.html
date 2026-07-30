@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Doxa - Decentralized multi-stablecoin protocol on Internet Computer">
+    <title>Doxa Whitepaper</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #378ADD;
+            --primary-dark: #185FA5;
+            --primary-light: #E6F1FB;
+            --accent: #D4537E;
+            --success: #639922;
+            --bg: #FFFFFF;
+            --surface: #F8FAFB;
+            --text: #1a1a1a;
+            --text-secondary: #666666;
+            --border: #E5E7EB;
+            --gradient: linear-gradient(135deg, #378ADD 0%, #D4537E 50%, #EF9F27 100%);
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f1419;
+            --surface: #1a202c;
+            --text: #f0f0f0;
+            --text-secondary: #b0b0b0;
+            --border: #2d3748;
+            --primary-light: rgba(55, 138, 221, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            min-height: 100vh;
+            gap: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 0;
+            overflow-y: auto;
+            max-height: 100vh;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(55, 138, 221, 0.05) 0%, rgba(212, 83, 126, 0.05) 100%);
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 12px;
+            background: var(--gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(55, 138, 221, 0.2);
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .nav-section {
+            padding: 0 12px;
+            margin-top: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            padding: 12px 14px;
+            margin: 2px 0;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            border-radius: 0 6px 6px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .nav-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .nav-item.active {
+            background: var(--primary-light);
+            border-left-color: var(--primary);
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 60px 80px;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .theme-toggle {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        .page-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text);
+            line-height: 1.2;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 600px;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .section-heading {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 50px 0 24px 0;
+            color: var(--text);
+            line-height: 1.2;
+        }
+
+        .section-heading:first-child {
+            margin-top: 0;
+        }
+
+        .subsection-heading {
+            font-size: 22px;
+            font-weight: 600;
+            margin: 36px 0 16px 0;
+            color: var(--text);
+        }
+
+        .content-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+
+        .content-text strong {
+            font-weight: 600;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 20px 0 28px 0;
+        }
+
+        .feature-list li {
+            padding: 12px 0 12px 32px;
+            position: relative;
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text);
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+            color: var(--success);
+            font-size: 18px;
+        }
+
+        .highlight-box {
+            background: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            padding: 24px;
+            margin: 28px 0;
+            border-radius: 8px;
+        }
+
+        .highlight-box-title {
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .highlight-box-content {
+            font-size: 15px;
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 28px 0;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 24px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(55, 138, 221, 0.1);
+        }
+
+        .card-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .card-value {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 28px 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, rgba(55, 138, 221, 0.1) 0%, rgba(212, 83, 126, 0.1) 100%);
+            padding: 16px;
+            text-align: left;
+            font-weight: 700;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 15px;
+            color: var(--text);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .cta-section {
+            background: var(--primary-light);
+            border: 1px solid var(--primary);
+            padding: 48px;
+            margin-top: 60px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .cta-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 24px;
+        }
+
+        .cta-button {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            margin: 0 8px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(55, 138, 221, 0.3);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                padding: 40px 50px;
+            }
+
+            .page-title {
+                font-size: 32px;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                max-height: 50vh;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .main-content {
+                padding: 24px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .section-heading {
+                font-size: 24px;
+                margin-top: 32px;
+            }
+
+            .subsection-heading {
+                font-size: 18px;
+            }
+
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .cta-section {
+                padding: 24px;
+            }
+        }
+
+        .breadcrumb {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .ordered-list {
+            list-style: decimal;
+            margin: 20px 0 28px 32px;
+        }
+
+        .ordered-list li {
+            padding: 8px 0;
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">𝐃</div>
+                <div class="sidebar-title">Doxa</div>
+                <div class="sidebar-subtitle">Whitepaper v1.0</div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <div class="nav-item active" onclick="showSection('abstract', event)">Abstract</div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">1. Introduction</div>
+                <div class="nav-item" onclick="showSection('problem', event)">Problem Statement</div>
+                <div class="nav-item" onclick="showSection('vision', event)">Vision & Principles</div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">2. Ecosystem</div>
+                <div class="nav-item" onclick="showSection('ecosystem', event)">Ecosystem Overview</div>
+                <div class="nav-item" onclick="showSection('doxausd', event)">DoxaUSD</div>
+                <div class="nav-item" onclick="showSection('token', event)">DOXA Token</div>
+                <div class="nav-item" onclick="showSection('dpay', event)">DPay</div>
+                <div class="nav-item" onclick="showSection('tbills', event)">T-Bills</div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">3. Technical</div>
+                <div class="nav-item" onclick="showSection('architecture', event)">Architecture</div>
+                <div class="nav-item" onclick="showSection('canisters', event)">Core Canisters</div>
+                <div class="nav-item" onclick="showSection('reserves', event)">Reserve System</div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">4-5. Economics</div>
+                <div class="nav-item" onclick="showSection('tokenomics', event)">Tokenomics</div>
+                <div class="nav-item" onclick="showSection('allocation', event)">Allocations & Vesting</div>
+                <div class="nav-item" onclick="showSection('yield', event)">Yield Model</div>
+                <div class="nav-item" onclick="showSection('treasury', event)">Treasury & Incentives</div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">6-8. Operations</div>
+                <div class="nav-item" onclick="showSection('economic', event)">Economic Model</div>
+                <div class="nav-item" onclick="showSection('security', event)">Security</div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">9-10. Future</div>
+                <div class="nav-item" onclick="showSection('roadmap', event)">Roadmap</div>
+                <div class="nav-item" onclick="showSection('compliance', event)">Compliance</div>
+                <div class="nav-item" onclick="showSection('conclusion', event)">Conclusion</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header-top">
+                <div>
+                    <div class="page-title">Doxa Whitepaper</div>
+                    <div class="page-subtitle">To build a crosschain multistablecoin infra on ICP</div>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
+            </div>
+
+            <!-- Abstract Section -->
+            <div id="abstract" class="content-section active">
+                <div class="section-heading">Abstract</div>
+                
+                <div class="content-text">
+                    <strong>Version:</strong> 1.0<br>
+                    <strong>Date:</strong> January 2026<br>
+                    <strong>Authors:</strong> DOXA Foundation Team<br>
+                    <strong>Status:</strong> Public Whitepaper
+                </div>
+
+                <p class="content-text">Doxa is a decentralised multi-stablecoin protocol built natively on the Internet Computer (ICP) that enables users to mint, manage, and transact with cross-chain stablecoins pegged to various fiat currencies. The protocol's flagship product, DoxaUSD (ticker: USDD), is a USD-pegged stablecoin backed 1:1 by ckUSDC with on-chain collateral reserves that are transparently verifiable by anyone in real-time.</p>
+
+                <p class="content-text">Beyond infrastructure, DOXA is designed to address one of the largest gaps in the global economy: over 1.5 billion people who remain unbanked or underbanked. By providing permissionless access to a stable digital dollar, near-zero transaction fees, and instant settlement, DOXA enables individuals and businesses in emerging markets to participate in global finance without relying on traditional banking systems.</p>
+
+                <p class="content-text">Unlike traditional fiat-backed stablecoins that rely on centralised issuers and periodic attestations, Doxa leverages the Internet Computer's unique technical capabilities, including zero-second finality, reverse gas model, and chain-fusion technology, to deliver a transparent, efficient, and censorship-resistant financial infrastructure.</p>
+
+                <p class="content-text">This whitepaper describes the protocol's architecture, economic model, security framework, and roadmap for establishing DOXA as a global, inclusive financial layer powering payments, savings, and commerce for both crypto-native users and the next billion participants in the digital economy.</p>
+            </div>
+
+            <!-- Problem Statement Section -->
+            <div id="problem" class="content-section">
+                <div class="section-heading">1. Introduction</div>
+                <div class="subsection-heading">1.1 Problem Statement</div>
+
+                <p class="content-text">Stablecoins are the backbone of the digital economy, yet most existing solutions suffer from critical weaknesses:</p>
+                <ul class="feature-list">
+                    <li>Centralised custody of reserves</li>
+                    <li>Opaque or delayed audits</li>
+                    <li>Governance concentration and regulatory capture</li>
+                    <li>Limited accessibility for emerging markets</li>
+                    <li>High transaction costs on legacy blockchains</li>
+                </ul>
+
+                <p class="content-text">At the same time, over 1.5 billion people globally remain excluded from the traditional financial system. These individuals face:</p>
+                <ul class="feature-list">
+                    <li>No access to bank accounts or reliable savings tools</li>
+                    <li>High remittance and transaction fees</li>
+                    <li>Exposure to volatile or inflationary local currencies</li>
+                    <li>Limited ability to participate in global commerce</li>
+                </ul>
+
+                <p class="content-text">This dual failure of inefficient stablecoin infrastructure and inaccessible financial systems prevents digital money from becoming a truly global public infrastructure.</p>
+            </div>
+
+            <!-- Vision Section -->
+            <div id="vision" class="content-section">
+                <div class="section-heading">1.2 The DOXA Vision</div>
+
+                <p class="content-text">DOXA aims to establish stablecoins as open, inclusive public financial infrastructure that financially includes the 1.4B unbanked while serving crypto-native users.</p>
+
+                <p class="content-text">The protocol is built on core principles:</p>
+                <ul class="feature-list">
+                    <li><strong>Full On-Chain Verifiability:</strong> Reserves, supply, and logic are transparent at all times.</li>
+                    <li><strong>Decentralised Governance:</strong> Community-controlled via an SNS DAO.</li>
+                    <li><strong>Global Accessibility:</strong> Near-zero fees, instant settlement, and cross-chain reach.</li>
+                    <li><strong>Financial Inclusion by Design:</strong> DOXA enables anyone with a smartphone to store value in a stable digital currency, send and receive payments globally, and access financial tools without a bank account</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <div class="highlight-box-title">Trust</div>
+                    <div class="highlight-box-content">In DeFi, trust is the foundation of every relationship. Doxa is built to earn confidence through transparency, verifiable transactions, and predictable outcomes. Users and investors can rely on the system with certainty, knowing that their funds and interests are safeguarded.</div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-box-title">Accountability</div>
+                    <div class="highlight-box-content">Every action on the doxa platform is backed by clear responsibility and measurable outcomes. We maintain rigorous reporting, audits, and governance to ensure that stakeholders can see exactly how resources are managed and decisions are made.</div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-box-title">Stewardship</div>
+                    <div class="highlight-box-content">Stewardship is the disciplined management of capital to maximize value while protecting assets. We treat every dollar entrusted to us as if it were our own, optimizing allocation, minimizing risk, and ensuring sustainable financial growth.</div>
+                </div>
+            </div>
+
+            <!-- Ecosystem Section -->
+            <div id="ecosystem" class="content-section">
+                <div class="section-heading">2. Overview of the DOXA Ecosystem</div>
+
+                <p class="content-text">The Doxa ecosystem creates a complete financial stack: DOXAUSD for stable payments, DOXA token for governance and incentives, DPay for merchant adoption, and Bitcoin T-Bills for secure, yield-bearing collateral. Together, they enable a frictionless, decentralised, and scalable financial infrastructure bridging crypto, stablecoins, and traditional finance.</p>
+
+                <p class="content-text">The DOXA ecosystem consists of:</p>
+                <ul class="feature-list">
+                    <li><strong>DOXAUSD:</strong> A USD-pegged stablecoin</li>
+                    <li><strong>DOXA Token:</strong> The governance and utility token</li>
+                    <li><strong>DPay:</strong> A payments and merchant settlement network powered by DoxaUSD to bring doxa to the mainstream</li>
+                    <li><strong>T-Bills:</strong> Future yield-bearing collateral infrastructure</li>
+                </ul>
+            </div>
+
+            <!-- DoxaUSD Section -->
+            <div id="doxausd" class="content-section">
+                <div class="section-heading">DoxaUSD</div>
+
+                <p class="content-text">DOXAUSD is a USD-pegged stablecoin designed for stability, liquidity, and mainstream usability. Each DOXAUSD token is backed by reserves, ensuring a 1:1 peg to the U.S. dollar. Its primary purpose is to serve as a reliable digital dollar alternative within the Doxa ecosystem, enabling fast, low-cost, and borderless transactions without the volatility typically associated with cryptocurrencies.</p>
+
+                <div class="subsection-heading">How DoxaUSD works</div>
+
+                <div class="subsection-heading" style="font-size: 18px; margin-top: 20px;">1. Collateral & Minting</div>
+                <p class="content-text">DoxaUSD is backed 1:1 to the US dollar and collateralised with ckUSDC (with a planned transition to tokenized T-bill–like assets as supporting infrastructure on ICP matures).</p>
+                <ul class="feature-list">
+                    <li>When a user mints DoxaUSD, an equal USD value of ckUSDC is deposited into a reserve canister</li>
+                    <li>For every 1 DoxaUSD minted, $1 worth of ckUSDC is locked on-chain</li>
+                    <li>All reserves are held in canisters, making them transparent and auditable</li>
+                </ul>
+
+                <div class="subsection-heading" style="font-size: 18px; margin-top: 20px;">2. Reserve & Stability Mechanism</div>
+                <p class="content-text">The protocol uses a stability pool to maintain the $1 peg:</p>
+                <ul class="feature-list">
+                    <li>The reserve maintains an excess buffer of ckUSDC</li>
+                    <li>If USDC trades below $1, the protocol increases ckUSDC deposits into the reserve</li>
+                    <li>If USDC trades above $1, ckUSDC can be withdrawn from the reserve</li>
+                    <li>This mechanism helps keep DoxaUSD pegged at $1 during short-term USDC price deviations</li>
+                </ul>
+
+                <div class="subsection-heading" style="font-size: 18px; margin-top: 20px;">3. On-chain Enforcement</div>
+                <ul class="feature-list">
+                    <li>Minting, burning, reserve accounting, and peg logic are enforced entirely by canister code</li>
+                    <li>There is no off-chain custodian making discretionary decisions</li>
+                    <li>All core logic runs natively on the Internet Computer</li>
+                </ul>
+
+                <div class="subsection-heading" style="font-size: 18px; margin-top: 20px;">4. User Utility & Yield</div>
+                <p class="content-text">Users can:</p>
+                <ul class="feature-list">
+                    <li>Mint DoxaUSD</li>
+                    <li>Stake or lock DoxaUSD</li>
+                    <li>Earn yield</li>
+                </ul>
+                <p class="content-text">Initially, yield is sourced from 70% of protocol transaction fees. Post-SNS (planned evolution): 50% of ICP raised via the SNS is staked in an 8-year neuron held by the treasury. Staking rewards from that neuron will fund DoxaUSD staking yields. This reduces long-term reliance on transaction fees and aligns incentives with sustainable governance.</p>
+
+                <div class="subsection-heading">Uniqueness of DOXAUSD</div>
+                <ul class="feature-list">
+                    <li>Fully on-chain dApp on ICP</li>
+                    <li>Near instant transfer speed with 0-second finality; no waiting for confirmations</li>
+                    <li>ChainFusion Technology enables easy integration and bridging of DUSD to other chains</li>
+                    <li>Gasless user experience using ICP's reverse gas model; users don't pay gas</li>
+                    <li>Very low fees: $0.07 per transaction</li>
+                    <li>All reserves managed on-chain, allowing real-time public verification</li>
+                    <li>Will eventually be governed by an SNS DAO for decentralized control</li>
+                </ul>
+
+                <div class="subsection-heading">Key Use Cases</div>
+                <ul class="feature-list">
+                    <li>Peer-to-peer and merchant payments</li>
+                    <li>Cross-border remittances (low-cost transfers for migrant workers)</li>
+                    <li>Payroll and trade settlement in unstable currency regions</li>
+                    <li>On-chain commerce and DeFi integrations</li>
+                    <li>Savings for users in high-inflation economies</li>
+                    <li>Micropayments and informal economy digitisation</li>
+                    <li>SME payments and financial access via DPay</li>
+                    <li>Local currency stablecoins for African and emerging markets</li>
+                </ul>
+            </div>
+
+            <!-- DOXA Token Section -->
+            <div id="token" class="content-section">
+                <div class="section-heading">DOXA Token</div>
+
+                <p class="content-text">The DOXA token is the ecosystem's governance and utility token. Holders can participate in decision-making, propose or vote on changes to the protocol, and access special features within the Doxa ecosystem.</p>
+
+                <p class="content-text"><strong>Key Features:</strong></p>
+                <ul class="feature-list">
+                    <li><strong>Governance:</strong> Token holders can vote on network upgrades, treasury allocation, and new initiatives.</li>
+                    <li><strong>Utility:</strong> Enables staking, fee discounts, and participation in ecosystem programs.</li>
+                    <li><strong>Incentives:</strong> Rewards active community members and liquidity providers.</li>
+                </ul>
+            </div>
+
+            <!-- DPay Section -->
+            <div id="dpay" class="content-section">
+                <div class="section-heading">DPay</div>
+
+                <p class="content-text">DPay is a payments and merchant settlement network powered by DOXAUSD. It is designed to bring Doxa to mainstream adoption by enabling businesses and consumers to transact seamlessly with a stable digital dollar.</p>
+
+                <p class="content-text">DPay plays a critical role in financial inclusion by enabling:</p>
+                <ul class="feature-list">
+                    <li>Informal merchants to accept digital payments without banking infrastructure</li>
+                    <li>Small businesses to build transaction history and access future credit systems</li>
+                    <li>Local economies to transition from cash-based systems to digital financial networks</li>
+                </ul>
+            </div>
+
+            <!-- T-Bills Section -->
+            <div id="tbills" class="content-section">
+                <div class="section-heading">T-Bills</div>
+
+                <p class="content-text">In the future, DOXA will leverage USD tokenised Treasury Bills (T-Bills) as a foundational component of our yield-bearing collateral infrastructure. This mechanism will allow DOXAUSD and other stablecoins within the ecosystem to be backed by highly secure, interest-generating assets, ensuring both stability and predictable yield for users.</p>
+
+                <p class="content-text">T-Bills will serve as collateral that accrues yield over time, creating a dual benefit: securing the stablecoin's value while simultaneously generating returns that can be reinvested or distributed across the network. This approach will enable DOXA to provide a non-inflationary, yield-enhanced stablecoin experience, positioning the platform as a financially robust alternative to traditional stablecoins.</p>
+
+                <p class="content-text">The infrastructure will support seamless integration with DOXA's multi-chain architecture, enabling users to leverage T-Bill-backed positions across DeFi protocols, payments networks, and liquidity pools. Over time, this system will allow DOXA to pioneer a model where the collateral itself generates yield that compounds within the ecosystem, enhancing financial inclusion by offering access to traditionally restricted, low-risk, yield-bearing instruments.</p>
+
+                <p class="content-text">By adopting T-Bills as future collateral, DOXA will establish a transparent, auditable, and high-trust framework for stablecoins, reinforcing our principles of stewardship, accountability, and trust. This will lay the groundwork for a new generation of stablecoins that combine security, liquidity, and yield in a single infrastructure.</p>
+            </div>
+
+            <!-- Architecture Section -->
+            <div id="architecture" class="content-section">
+                <div class="section-heading">3. Technical Architecture</div>
+
+                <div class="subsection-heading">3.1 Platform: Internet Computer</div>
+
+                <p class="content-text">DOXA is built natively on ICP, enabling:</p>
+                <ul class="feature-list">
+                    <li>Web-speed finality</li>
+                    <li>On-chain storage and computation</li>
+                    <li>Reverse gas model (near-zero user fees)</li>
+                    <li>Native DAO governance via SNS</li>
+                </ul>
+            </div>
+
+            <!-- Canisters Section -->
+            <div id="canisters" class="content-section">
+                <div class="section-heading">3.2 Core Canisters</div>
+
+                <p class="content-text">DOXA architecture relies on specialized canisters (smart contracts on ICP) to modularize responsibilities:</p>
+
+                <div class="subsection-heading">Minter Canister</div>
+                <ul class="feature-list">
+                    <li>Handles minting and redemption of DOXAUSD</li>
+                    <li>Accepts collateral deposits (ckUSDC or tokenized T-Bills)</li>
+                    <li>Enforces 1:1 peg in a fully on-chain manner</li>
+                </ul>
+
+                <div class="subsection-heading">Ledger Canister (ICRC-2 compliant)</div>
+                <ul class="feature-list">
+                    <li>Maintains balances of DOXAUSD and tracks all transfers and burns</li>
+                    <li>Supports standard token operations while ensuring auditability</li>
+                </ul>
+
+                <div class="subsection-heading">Reserve Pool Canister</div>
+                <ul class="feature-list">
+                    <li>Holds collateral reserves</li>
+                    <li>Implements excess buffer management to stabilize DOXAUSD against short-term market deviations</li>
+                    <li>Provides on-chain transparency for all reserve holdings</li>
+                </ul>
+
+                <div class="subsection-heading">How it works</div>
+                <ul class="feature-list">
+                    <li>Ensures there is an excess supply of ckUSDC to maintain the DOXAUSD peg at $1</li>
+                    <li>Below $1: More ckUSDC is deposited into the Reserve Pool to stabilize the peg</li>
+                    <li>Above $1: ckUSDC is withdrawn from the Reserve Pool to maintain peg stability</li>
+                </ul>
+            </div>
+
+            <!-- Reserves Section -->
+            <div id="reserves" class="content-section">
+                <div class="section-heading">3.3 Reserve Transparency and Auditability</div>
+
+                <p class="content-text">Financial integrity is critical. DOXA enforces:</p>
+                <ul class="feature-list">
+                    <li><strong>Invariant:</strong> Total Reserves ≥ Total DOXA USD Supply</li>
+                    <li><strong>Public Verification:</strong> Any user can query reserve holdings, peg ratios, and supply in real-time</li>
+                    <li><strong>Immutable Ledger:</strong> Every transaction affecting collateral, minting, or redemptions is permanently recorded on-chain</li>
+                </ul>
+
+                <p class="content-text">This architecture ensures trust, accountability, and stewardship, as all financial operations are visible, verifiable, and auditable by any participant without requiring external intermediaries.</p>
+            </div>
+
+            <!-- Tokenomics Section -->
+            <div id="tokenomics" class="content-section">
+                <div class="section-heading">5. DOXA Tokenomics</div>
+
+                <div class="subsection-heading">5.1 Token Overview</div>
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-label">Token Name</div>
+                        <div class="card-value">DOXA</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-label">Initial Supply</div>
+                        <div class="card-value">10M</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-label">Inflation</div>
+                        <div class="card-value">0%</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-label">Decimals</div>
+                        <div class="card-value">8</div>
+                    </div>
+                </div>
+
+                <div class="subsection-heading">5.2 Initial Token Allocation</div>
+                <p class="content-text">Inspired by successful and timetested models like that of Bitcoin, WaterNeuron, OpenChat, and Cecil The lion DAO, DOXA tokens are allocated as follows:</p>
+                <ul class="feature-list">
+                    <li>50% of the ICP raised during the decentralisation process will be locked in an 8-year neuron, with all staking rewards generated allocated to DoxaUSD (DUSD) staker yields</li>
+                    <li>10% of the ICP will be used as Protocol-Owned Liquidity</li>
+                    <li>The remaining 40% will be used for DAO operations</li>
+                    <li>All yield rewards will be distributed exclusively in $DOXA</li>
+                    <li>DAO-generated profits will be periodically exchanged into $DOXA, creating ongoing demand and contributing to long-term token value accrual</li>
+                    <li>The DOXA Foundation was allocated 3% of tokens to fund ecosystem growth, strategic initiatives, community engagement, and long-term support of the protocol</li>
+                </ul>
+            </div>
+
+            <!-- Allocations Section -->
+            <div id="allocation" class="content-section">
+                <div class="section-heading">5.3 Vesting & Locks</div>
+
+                <p class="content-text"><strong>Decentralization Sale:</strong> Distributed as neuron baskets with staggered unlocks across tranches: 10% on listing, 10% at 3 months, 15% at 6 months, 15% at 12 months, 20% at 18 months, and 30% at 24 months. Only 300,000 DOXA enters circulation on day one.</p>
+
+                <p class="content-text"><strong>Team & Advisors:</strong> 4-year vesting with 12-month cliff. Tokens unlock linearly after the cliff over the remaining 3 years. Additional compensation available via DAO-approved Future Talent Reserve held within the Treasury.</p>
+
+                <p class="content-text"><strong>DOXA Foundation:</strong> 6-month cliff, followed by linear unlock over 2 years. Funds ecosystem growth, strategic initiatives, and long-term protocol support.</p>
+
+                <p class="content-text"><strong>Early Contributors:</strong> Split into eight tranches, 30% unlocks at 4 months, 30% unlocks at 8 months and 40% at 12months. No further vesting after 12 months, recognising early-stage contribution without long lock-up.</p>
+
+                <p class="content-text"><strong>Treasury & Ecosystem:</strong> DAO-controlled (90% of total supply), released by governance proposal. Deployment governed by the ratified Treasury Deployment Framework: Protocol-Owned Liquidity (20%), Ecosystem Grants (5%), Regional Growth (15%), Staking Yield Reserve (10%), Future Talent (8%), Security & Audits (5%), Strategic Partnerships (15%), Strategic Long-term Reserve locked for 3 years (12%).</p>
+
+                <p class="content-text">This structure gives the community sovereign control over 90% of all DOXA tokens, prevents short-term speculation through staggered vesting, and aligns all stakeholders, founders, contributors, and the DAO with the long-term success of the protocol.</p>
+            </div>
+
+            <!-- Yield Section -->
+            <div id="yield" class="content-section">
+                <div class="section-heading">5.4 Non-Inflationary Yield Model</div>
+
+                <p class="content-text">DOXA is designed as a strictly non-inflationary financial protocol, where user rewards are derived from real economic activity rather than token emissions. Inspired by capital-efficient systems such as WaterNeuron, DOXA introduces a sustainable yield framework that aligns incentives across users, token holders, and the protocol treasury.</p>
+
+                <div class="subsection-heading">5.4.1 Fixed Supply and Zero Inflation</div>
+                <p class="content-text">DOXA maintains a hard-capped monetary policy:</p>
+                <ul class="feature-list">
+                    <li>Total Supply: 10,000,000 DOXA</li>
+                    <li>Inflation Rate: 0%</li>
+                </ul>
+                <p class="content-text">No additional tokens are minted beyond the initial allocation and vesting schedule. This guarantees no dilution of token holders, predictable long-term token economics, and value accrual driven purely by adoption and revenue.</p>
+
+                <div class="subsection-heading">5.4.2 Revenue-Based Reward System</div>
+                <p class="content-text">Unlike traditional DeFi models that rely on inflationary emissions, DOXA distributes rewards from net protocol profits. At each epoch (e.g., weekly or monthly): 10% of Net Protocol Profits (P) is allocated to user rewards, and 90% of Net Protocol Profits is retained by the DAO treasury.</p>
+
+                <div class="subsection-heading">Definition of Net Protocol Profit (P)</div>
+                <p class="content-text">Protocol profit is derived from aggregated ecosystem revenues, including:</p>
+                <ul class="feature-list">
+                    <li>DoxaUSD minting, redemption, and stability fees</li>
+                    <li>DPay transaction and merchant fees</li>
+                    <li>Yield from treasury-managed assets (e.g., ICP neurons, T-Bills in future)</li>
+                    <li>Liquidity provisioning and collateral management fees</li>
+                    <li>Cross-chain and ecosystem integration revenues</li>
+                </ul>
+                <p class="content-text">All operational costs and DAO-approved expenditures are deducted to determine net profit.</p>
+
+                <div class="subsection-heading">5.4.3 Reward Distribution Mechanism</div>
+                <p class="content-text">Rewards are distributed proportionally based on staking participation using a time-weighted model. This mechanism ensures transparent and predictable reward allocation, direct linkage between protocol performance and user earnings, and fair distribution based on participation, not speculation.</p>
+
+                <div class="subsection-heading">5.4.4-5.4.8 Core Principles</div>
+                <p class="content-text"><strong>Elimination of Inflationary Incentives:</strong> DOXA removes the need for artificial yield mechanisms with no token emissions to subsidize rewards, no farming-based dilution models, and no dependency on unsustainable APY structures. All rewards are backed by real revenue, economically sustainable, and independent of token inflation.</p>
+
+                <p class="content-text"><strong>Capital Efficiency Without Dilution:</strong> Following principles demonstrated by WaterNeuron, DOXA maximizes capital efficiency by keeping assets within the ecosystem productive, preserving liquidity through DoxaUSD and integrated financial primitives, and generating yield without expanding token supply. This enables scalable growth while maintaining monetary discipline.</p>
+
+                <p class="content-text"><strong>Treasury-Led Value Accrual:</strong> The DAO treasury is the core engine of long-term value, retaining 90% of protocol profits for liquidity provisioning, strategic buybacks (subject to governance), ecosystem incentives and grants, and collateral and reserve strengthening. This structure creates sustained demand for DOXA, reinforced price stability, and long-term ecosystem growth.</p>
+
+                <p class="content-text"><strong>Economic Flywheel:</strong> DOXA establishes a self-reinforcing economic cycle where increased adoption of DoxaUSD and DPay leads to growth in protocol revenues, expansion of reward pool (10% of profits), increased staking participation, and strengthened token demand and ecosystem expansion.</p>
+
+                <p class="content-text"><strong>Core Principle:</strong> DOXA rewards are generated from real economic output, not token inflation. This model ensures sustainable yield across market cycles, alignment between users, stakers, and the protocol, and preservation of token scarcity and long-term value.</p>
+            </div>
+
+            <!-- Treasury Section -->
+            <div id="treasury" class="content-section">
+                <div class="section-heading">6. Treasury, Yield & User Incentives</div>
+
+                <div class="subsection-heading">6.1 Treasury</div>
+                <p class="content-text">The DAO treasury holds DOXA tokens, protocol revenues (fees), and ICP raised.</p>
+                <p class="content-text">Treasury funds are used for liquidity provisioning, partnerships, and security audits.</p>
+
+                <div class="subsection-heading">6.2 DUSD Utility</div>
+                <p class="content-text">Users can mint and redeem DUSD, stake or lock DUSD, and earn protocol-generated yield.</p>
+
+                <div class="subsection-heading">7.2 Yield Sources</div>
+                <p class="content-text"><strong>Pre-SNS:</strong> Yield is funded primarily from protocol transaction fees.</p>
+                <p class="content-text"><strong>Post-SNS (Governance-Controlled):</strong></p>
+                <ul class="feature-list">
+                    <li>50% of ICP raised during the SNS decentralisation sale is locked in an 8-year neuron</li>
+                    <li>10% of the ICP will be used for providing Protocol Liquidity</li>
+                    <li>The neuron is controlled by the DAO treasury</li>
+                    <li>Staking rewards generated from this neuron are directed to DoxaUSD (DUSD) stakers</li>
+                    <li>All yield rewards distributed to DUSD stakers are paid exclusively in DOXA tokens, reinforcing the governance token as the primary value-accrual asset of the protocol</li>
+                </ul>
+            </div>
+
+            <!-- Economic Model Section -->
+            <div id="economic" class="content-section">
+                <div class="section-heading">7. Economic Model</div>
+
+                <div class="subsection-heading">Protocol Transaction Fees</div>
+                <p class="content-text">Every time a user transfers DoxaUSD, a small transaction fee is charged $0.07 per tx. Every time a user redeems staked DoxaUSD, 2% is cut off the profits to discourage early redemptions.</p>
+                <p class="content-text"><strong>Profit flow:</strong> Fees collected → DAO treasury → Converted to $Doxa to accumulate value</p>
+
+                <div class="subsection-heading">DAO Treasury Management</div>
+                <p class="content-text">The DAO holds reserves of ICP, DOXA tokens, and protocol revenues. DAO can invest treasury funds (e.g., liquidity provisioning, partnerships, yield strategies). Treasury-generated profits can be converted to DOXA, creating continuous demand for the governance token.</p>
+
+                <div class="subsection-heading">c. Staking & Yield Mechanics</div>
+                <p class="content-text">Users can stake DoxaUSD to earn yield. Yield comes from protocol transaction fees (pre-SNS launch) and DAO treasury neuron rewards (post-SNS): 50% of ICP raised during decentralization is locked in an 8-year neuron, and staking rewards from this neuron are distributed to DoxaUSD holders in DOXA tokens. 20% of the ICP yield from the neurons is directed to the DAO Treasury.</p>
+                <p class="content-text"><strong>Profit implication:</strong> More users staking DoxaUSD → more demand for DOXA token → price support for governance token → value accrual to the DAO.</p>
+
+                <div class="subsection-heading">d. Ecosystem & Product Adoption</div>
+                <ul class="feature-list">
+                    <li>DPay merchant network: transaction volume generates fees and increases stablecoin usage</li>
+                    <li>Bitcoin T-Bills: yield-bearing token backed by US Treasuries; part of the yield or collateralization strategy contributes to DAO revenue</li>
+                    <li>Cross-chain integrations: bridging fees or incentives when DoxaUSD is used across Ethereum, Solana, or other chains</li>
+                </ul>
+                <p class="content-text"><strong>Profit implication:</strong> Higher adoption → more transactions → more protocol fees → more DOXA value through yield distribution and token demand.</p>
+
+                <div class="subsection-heading">e. Value Accrual to DOXA Token</div>
+                <p class="content-text">All profits eventually flow back to DOXA token: DUSD staking rewards are paid in DOXA, DAO can swap protocol revenues into DOXA, and governance and utility demand grows as the ecosystem expands.</p>
+            </div>
+
+            <!-- Security Section -->
+            <div id="security" class="content-section">
+                <div class="section-heading">8. Security Considerations</div>
+
+                <ul class="feature-list">
+                    <li>Non-custodial design</li>
+                    <li>No off-chain reserve dependence</li>
+                    <li>Formal verification of critical invariants</li>
+                    <li>Emergency pause mechanisms</li>
+                    <li>Progressive decentralization</li>
+                </ul>
+            </div>
+
+            <!-- Roadmap Section -->
+            <div id="roadmap" class="content-section">
+                <div class="section-heading">9. Roadmap</div>
+
+                <div class="subsection-heading">Phase 1 – Foundation & Launch (Q2 2025 – Q4 2025)</div>
+                <p class="content-text"><strong>Objective:</strong> Launch core products and establish trust in DoxaUSD</p>
+                <ul class="feature-list">
+                    <li><strong>Mainnet Launch of DoxaUSD (USDx):</strong> 1:1 USD peg backed by ckUSDC, on-chain reserve transparency via canisters</li>
+                    <li><strong>Stablecoin Minter Deployment:</strong> Users can mint, redeem, and stake DoxaUSD</li>
+                    <li><strong>USDx Ledger & ckUSDC Reserve Pool:</strong> Ensures peg stability and real-time verification</li>
+                </ul>
+
+                <div class="subsection-heading">Phase 2 – Ecosystem Expansion (Q1 2026 – Q2 2026)</div>
+                <p class="content-text"><strong>Objective:</strong> Build governance, security, and compliance foundations</p>
+                <ul class="feature-list">
+                    <li><strong>Initial Governance Setup:</strong> Multisig-controlled treasury, Preparation for SNS DAO</li>
+                    <li><strong>SNS DAO Pilot Launch:</strong> Governance with DOXA tokens, Voting on protocol parameters and treasury usage</li>
+                    <li><strong>Enhanced Governance:</strong> Full SNS DAO control, Tokenized decision-making on ecosystem upgrades</li>
+                </ul>
+
+                <div class="subsection-heading">Phase 3 – Liquidity & Listing (Q2 2026 – Q4 2026)</div>
+                <p class="content-text"><strong>Objective:</strong> Expand liquidity and usability across ecosystems</p>
+                <ul class="feature-list">
+                    <li><strong>DEX Listings of DoxaUSD & Doxa:</strong> ICP-native DEXes: ICPSwap, Sonic, InfinitySwap, and others, Incentivize liquidity providers</li>
+                    <li><strong>Research:</strong> The Demand and possibility of staked DUSD. If viable, ReDesign Protocol Architecture, Begin Implementation</li>
+                    <li><strong>Product Upgrades:</strong> Enhanced dashboard for staking, yield, and governance, Advanced staking features and ICP neuron rewards, UI/UX improvements for merchants, Yield generation for DoxaUSD holders</li>
+                    <li><strong>Security & Compliance Measures:</strong> Smart contract audits, Real-time analytics dashboard, Regulatory compliance alignment, fitness assessment, and research</li>
+                </ul>
+
+                <div class="subsection-heading">Phase 4 – Mainstream Adoption (Q1 2027 – Q4 2027)</div>
+                <p class="content-text"><strong>Objective:</strong> Bring Doxa stablecoins to global consumers and businesses</p>
+                <ul class="feature-list">
+                    <li><strong>DPay Payments Network Launch:</strong> Merchant integrations (online and offline), Low-cost, near-instant settlements using DoxaUSD</li>
+                    <li><strong>Bitcoin T-Bills Launch:</strong> Yield-bearing token backed by U.S. Treasuries, Integration with DoxaUSD as collateral</li>
+                    <li><strong>DPay Merchant Expansion:</strong> Integration with e-commerce platforms, Support for offline retail payments</li>
+                    <li><strong>Financial Instruments Launch:</strong> Yield-bearing savings using DoxaUSD & Bitcoin T-Bills</li>
+                </ul>
+
+                <div class="subsection-heading">Phase 5 – Global Scale & Infrastructure (2028 and Beyond)</div>
+                <p class="content-text"><strong>Objective:</strong> Establish Doxa as a global financial infrastructure</p>
+                <ul class="feature-list">
+                    <li><strong>Cross-Chain Bridges Deployment:</strong> Ethereum, Solana, and other major chains, Integration via ChainFusion technology</li>
+                    <li><strong>Cross-Border Payments Infrastructure Expansion:</strong> Remittances and international settlements, Low-cost micropayments for unbanked populations</li>
+                    <li><strong>Integration with Traditional Banks & Fintechs:</strong> ISO-compliant rails for mainstream financial interoperability</li>
+                    <li><strong>DEX & CEX Listings:</strong> Listing Doxa stablecoins on top global exchanges for liquidity, Incentives for global traders and institutional users</li>
+                    <li><strong>Product Upgrade:</strong> Improved UX for DPay, and staking dashboard, Continuous enhancements to staking, yield, and cross-chain features</li>
+                </ul>
+            </div>
+
+            <!-- Compliance Section -->
+            <div id="compliance" class="content-section">
+                <div class="section-heading">10. Regulatory Compliance</div>
+
+                <p class="content-text">As a stablecoin protocol, DOXA recognizes the importance of operating within applicable legal and regulatory frameworks while maintaining the decentralized nature of its governance.</p>
+
+                <div class="subsection-heading">Legal Entity: DOXA Foundation</div>
+                <p class="content-text">The DOXA Foundation will later be re-incorporated in the Cayman Islands, Switzerland or Wyoming for global positioning with a representative from the early sns investors to be a board member to represent the views of all early sns investors.</p>
+                <p class="content-text">The Foundation serves as the legal and regulatory representative of the DAO and the DOXA ecosystem.</p>
+                <p class="content-text"><strong>Responsibilities include:</strong></p>
+                <ul class="feature-list">
+                    <li>Acting as the corporate entity for contractual relationships with partners, exchanges, and service providers</li>
+                    <li>Managing legal and compliance matters on behalf of the DAO</li>
+                    <li>Ensuring adherence to anti-money laundering (AML), counter-terrorism financing (CTF), and financial reporting obligations as applicable</li>
+                </ul>
+
+                <div class="subsection-heading">DAO Governance & On-Chain Operations</div>
+                <p class="content-text">While the Foundation handles legal matters, all protocol operations remain fully on-chain. Minting, burning, reserve management, and peg logic are executed autonomously via canisters on the Internet Computer. The DAO retains full control over governance, treasury allocation, and protocol upgrades through the SNS, ensuring decentralization is not compromised.</p>
+
+                <div class="subsection-heading">Compliance Mechanisms</div>
+                <p class="content-text">The Foundation will implement standard compliance procedures consistent with global stablecoin best practices, including:</p>
+                <ul class="feature-list">
+                    <li>Periodic audits of reserve holdings and peg maintenance</li>
+                    <li>Coordination with regulators to maintain transparency and operational legality</li>
+                    <li>Risk assessments for protocol upgrades, cross-chain integrations, and treasury management</li>
+                </ul>
+
+                <div class="subsection-heading">Strategic Alignment</div>
+                <p class="content-text">By separating legal operations (Foundation) from protocol control (DAO), DOXA ensures:</p>
+                <ul class="feature-list">
+                    <li>The protocol can operate globally with regulatory recognition</li>
+                    <li>Users benefit from a fully decentralized, on-chain stablecoin infrastructure</li>
+                    <li>Long-term sustainability and trust are maintained for both regulators and the community</li>
+                </ul>
+            </div>
+
+            <!-- Conclusion Section -->
+            <div id="conclusion" class="content-section">
+                <div class="section-heading">Conclusion</div>
+
+                <p class="content-text">DOXA represents a new generation of stablecoin infrastructure fully on-chain, transparently collateralised, and community-governed.</p>
+
+                <p class="content-text">More importantly, DOXA is not just a financial protocol; it is a step toward redefining access to money itself. By removing reliance on banks, reducing transaction costs to near zero, and enabling instant global payments, DOXA opens the financial system to those who have historically been excluded.</p>
+
+                <p class="content-text">With a sustainable yield model, DAO-controlled treasury, and scalable architecture, DOXA and DoxaUSD are positioned to become foundational infrastructure for a more inclusive global economy, one where anyone, anywhere, can save, transact, and build wealth without barriers.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update button
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        }
+
+        // Load saved theme
+        const saved = localStorage.getItem('theme') || 'light';
+        if (saved === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.querySelector('.theme-toggle').textContent = '☀️';
+        }
+
+        function showSection(sectionId, event) {
+            event.preventDefault();
+            
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            
+            // Remove active class from nav items
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            
+            // Show selected section
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.add('active');
+                event.currentTarget.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                const navItems = Array.from(document.querySelectorAll('.nav-item'));
+                const activeItem = document.querySelector('.nav-item.active');
+                const activeIndex = navItems.indexOf(activeItem);
+
+                if (e.key === 'ArrowUp' && activeIndex > 0) {
+                    navItems[activeIndex - 1].click();
+                } else if (e.key === 'ArrowDown' && activeIndex < navItems.length - 1) {
+                    navItems[activeIndex + 1].click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
