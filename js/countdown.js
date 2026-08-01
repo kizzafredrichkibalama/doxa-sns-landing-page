@@ -7,9 +7,9 @@ DOXA SNS COUNTDOWN
 // ======================================================
 
 // Example:
-// October 30, 2026 at 16:00 UTC
+// October 7, 2026 at 16:00 UTC
 
-const launchDate = new Date("2026-10-30T16:00:00").getTime();
+const launchDate = new Date("2026-08-11T16:00:00").getTime();
 
 // ======================================================
 
