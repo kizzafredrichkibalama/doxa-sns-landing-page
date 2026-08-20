@@ -3230,3 +3230,36 @@ MOBILE MENU
         width: 100%;
     }
 }
+/* 2-Column Icon Grid */
+.social-links-grid {
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    gap: 12px;
+}
+
+.social-links-grid a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.social-links-grid a:hover {
+    background: #2563eb;
+    color: #ffffff;
+    transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+    .social-links-grid {
+        justify-content: center;
+        margin: 12px auto 0;
+    }
+}
