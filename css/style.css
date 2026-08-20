@@ -892,10 +892,12 @@ p{
     background:#fafcff;
 }
 
-.icp-large{
-    width: 1000px;
-    margin:auto;
-    animation:float 5s ease-in-out infinite;
+.icp-large {
+    width: 100%;
+    max-width: 1000px;
+    height: auto;
+    margin: auto;
+    animation: float 5s ease-in-out infinite;
 }
 
 .icp-list{
