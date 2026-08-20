@@ -3209,3 +3209,24 @@ MOBILE MENU
         font-size: 0.95rem;
     }
 }
+/* ==========================================
+   Center Footer & ICP Logos on Mobile
+   ========================================== */
+@media (max-width: 768px) {
+    .footer-logo,
+    .icp-logo {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+
+    /* Centers parent wrapper if logos are inside flex containers */
+    .footer-logo-wrapper, 
+    .icp-logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+}
