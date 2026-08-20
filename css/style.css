@@ -156,7 +156,16 @@ button{
     background:#fafafa;
 
 }
+/*'''''''''''''''prevent  ''''*/
+section, .hero, .container {
+    max-width: 100%;
+    overflow-x: hidden;
+}
 
+img, svg, canvas, video {
+    max-width: 100%;
+    height: auto;
+}
 /*============ CONTAINER ============*/
 
 .container{
