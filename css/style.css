@@ -3011,33 +3011,30 @@ MOBILE MENU
 ===============================*/
 
 @media (max-width:992px){
+/* REPLACE IN @media (max-width: 992px) */
+.nav-buttons {
+    display: none;
+}
 
-.nav-links{
+.nav-links {
+    display: flex;
+    position: fixed;
+    top: 86px;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    padding: 30px;
+    transform: translateY(-150%);
+    transition: transform .4s ease;
+    box-shadow: 0 20px 40px rgba(0,0,0,.08);
+    z-index: 999;
+}
 
-    position:fixed;
-
-    top:86px;
-
-    left:0;
-
-    width:100%;
-
-    background:#fff;
-
-    flex-direction:column;
-
-    align-items:center;
-
-    gap:30px;
-
-    padding:40px;
-
-    transform:translateY(-150%);
-
-    transition:.4s;
-
-    box-shadow:0 20px 40px rgba(0,0,0,.08);
-
+.nav-links.show-menu {
+    transform: translateY(0);
 }
 
 .nav-links.show-menu{
