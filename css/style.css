@@ -892,10 +892,10 @@ p{
     background:#fafcff;
 }
 
-.icp-large{
-    width: 1000px;
-    margin:auto;
-    animation:float 5s ease-in-out infinite;
+.icp-large {
+    width: 100%;
+    max-width: 1000px;
+    height: auto;
 }
 
 .icp-list{
@@ -988,8 +988,8 @@ p{
 .chart-card{
 
     position:relative;
-
-    width:450px;
+    width: 100%;
+    max-width: 450px;    
     height:450px;
 
     margin:auto;
@@ -2185,20 +2185,20 @@ h2{
     grid-template-columns:repeat(2,1fr);
 }
 
-.launch-countdown{
-    grid-template-columns:repeat(2,1fr);
+.countdown,
+.launch-countdown {
+        grid-template-columns: repeat(2, 1fr);
 }
 
 .trust-grid,
-.features-grid,
 .ecosystem-grid,
-.timeline,
+.features-grid,
 .security-grid,
-.team-grid,
-.roadmap-grid{
-    grid-template-columns:1fr;
+.roadmap-grid,
+.team-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
 }
-
 .logo-grid{
     grid-template-columns:repeat(2,1fr);
 }
@@ -2250,6 +2250,18 @@ h2{
 .launch-card{
     padding:40px 20px;
 }
+/* Mobile drawer visibility */
+    .nav-links, 
+    .nav-buttons {
+        display: none;
+    }
+
+    .nav-links.open, 
+    .nav-buttons.open {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
 
 }
 
