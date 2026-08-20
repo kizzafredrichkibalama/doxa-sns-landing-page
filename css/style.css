@@ -2261,6 +2261,17 @@ h2{
 
 @media (max-width:480px){
 
+    /* ADD / UPDATE IN @media (max-width: 480px) */
+.chart-card {
+    width: 100%;
+    max-width: 300px;
+    height: 300px;
+}
+
+.chart-card canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
 .container{
     width:92%;
 }
